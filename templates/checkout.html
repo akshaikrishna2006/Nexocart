@@ -64,6 +64,17 @@
             </div>
 
             <button type="submit" class="btn">Confirm & Place Order</button>
+            <!-- UPI Intent Direct Payment Button -->
+<div class="card p-4 my-4 text-center shadow-sm rounded">
+    <h4 class="mb-2">Select Payment Method</h4>
+    <p class="text-muted mb-3">Pay directly using your favorite UPI app</p>
+
+    <!-- Direct UPI App Intent Link with your UPI ID -->
+    <a href="upi://pay?pa=akshai7909@okicici&pn=Nexocart&am={{ total_price }}&cu=INR&tn=Order%20Payment" 
+       class="btn btn-success btn-lg w-100 py-3 font-weight-bold">
+       <i class="fas fa-wallet mr-2"></i> Pay via UPI App (GPay / PhonePe / Paytm)
+    </a>
+</div>
         </form>
     </div>
 

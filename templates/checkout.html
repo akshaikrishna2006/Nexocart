@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - Nexocart</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 30px; background: #f8f9fa; }
+        .form-box { max-width: 550px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        h2 { text-align: center; color: #9c27b0; margin-bottom: 25px; }
+        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; color: #333; }
+        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1em; }
+        
+        .payment-options { margin-top: 20px; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; background: #fafafa; }
+        .payment-option { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
+        .payment-option input { margin-right: 12px; transform: scale(1.2); }
+        
+        #upi-details { display: none; margin-top: 15px; padding: 15px; background: #fff; border: 1px dashed #9c27b0; border-radius: 8px; text-align: center; }
+        #qr-code { margin-top: 15px; width: 180px; height: 180px; }
+        
+        .upi-app-btn { background: #2e7d32; color: white; padding: 12px; border-radius: 6px; text-decoration: none; display: block; margin-top: 15px; font-weight: bold; text-align: center; }
+        .upi-app-btn:hover { background: #1b5e20; }
+
+        .btn { background: #9c27b0; color: white; padding: 14px; border: none; width: 100%; border-radius: 6px; font-size: 1.1em; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; }
+        .btn:hover { background: #7b1fa2; }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <h2>Checkout Details (Total: ₹{{ total_price }})</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <label>Full Name</label>
+            <input type="text" name="name" required placeholder="Enter your full name">
+            
+            <label>Phone Number</label>
+            <input type="text" name="phone" required placeholder="Enter 10-digit phone number">
+            
+            <label>Delivery Address</label>
+            <textarea name="address" rows="3" required placeholder="Enter full address with pincode"></textarea>
+            
+            <label>Select Payment Method</label>
+            <div class="payment-options">
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="COD" checked onclick="togglePayment('COD')">
+                    Cash on Delivery (COD)
+                </label>
+                
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="UPI" onclick="togglePayment('UPI')">
+                    UPI / Google Pay / PhonePe / Paytm (Auto-Amount QR)
+                </label>
+            </div>
+
+            <!-- UPI Details & QR Code Section -->
+            <div id="upi-details">
+                <p style="margin: 0; font-weight: bold; color: #2e7d32;">Scan QR Code to Pay ₹{{ total_price }} (Pre-filled)</p>
+                
+                <!-- QR Code with Nexocart Brand -->
+                <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=akshai7909@okicici&pn=Nexocart&am={{ total_price }}&cu=INR" alt="UPI QR Code">
+                
+                <!-- Direct mobile UPI App button -->
+                <a href="upi://pay?pa=akshai7909@okicici&pn=Nexocart&am={{ total_price }}&cu=INR" class="upi-app-btn">Pay ₹{{ total_price }} via UPI App</a>
+            </div>
+
+            <button type="submit" class="btn">Confirm & Place Order</button>
+        </form>
+    </div>
+
+    <script>
+        function togglePayment(method) {
+            const upiBox = document.getElementById('upi-details');
+            if (method === 'UPI') {
+                upiBox.style.display = 'block';
+            } else {
+                upiBox.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
